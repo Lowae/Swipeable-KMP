@@ -10,7 +10,7 @@ plugins {
     alias(libs.plugins.vanniktech.mavenPublish)
 }
 
-group = "com.stevdza_san"
+group = "com.stevdza-san"
 version = "2.0.0" // Semantic versioning for better compatibility
 
 kotlin {
@@ -51,7 +51,6 @@ kotlin {
                 implementation(compose.material3)
                 implementation(compose.ui)
                 implementation(compose.components.resources)
-                implementation(compose.components.uiToolingPreview)
             }
         }
         val desktopMain by getting {
@@ -92,7 +91,7 @@ mavenPublishing {
     coordinates(
         groupId = "com.stevdza-san",
         artifactId = "swipeable-kmp",
-        version = version.toString() // Uses the version defined above
+        version = version.toString()
     )
 
     // Configure POM metadata for the published artifact

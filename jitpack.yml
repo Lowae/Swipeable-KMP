@@ -1,0 +1,7 @@
+jdk:
+  - openjdk17
+
+# JitPack runs `./gradlew install` by default. For KMP + maven-publish we publish to the local Maven repo
+# so JitPack can collect the produced artifacts.
+install:
+  - ./gradlew :library:publishToMavenLocal --no-daemon --stacktrace

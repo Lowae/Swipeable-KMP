@@ -535,7 +535,8 @@ private fun BoxScope.RevealActionsContent(
 
             // Use custom spacing or calculate dynamic spacing based on button sizes
             val spacing = customSpacing ?: run {
-                val maxButtonSize = actions.maxOfOrNull { it.customization.padding } ?: 48.dp
+//                val maxButtonSize = actions.maxOfOrNull { it.customization.padding } ?: 48.dp
+                val maxButtonSize = 48.dp
                 (maxButtonSize * 0.16f).coerceAtLeast(6.dp) // 16% of largest button, minimum 6dp
             }
 
@@ -595,11 +596,8 @@ private fun ActionButton(
             .then(
                 animationConfig.customModifier?.invoke(progress) ?: Modifier
             ) // Apply custom animation
-            .size(action.customization.padding)
             .scale(scale)
             .alpha(alpha)
-            .clip(action.customization.shape)
-            .background(action.customization.containerColor)
             .then(
                 if (isInteractive) {
                     Modifier.clickable { onClick() }
@@ -609,11 +607,6 @@ private fun ActionButton(
             ),
         contentAlignment = Alignment.Center
     ) {
-        Icon(
-            modifier = Modifier.size(action.customization.iconSize),
-            painter = painterResource(action.customization.icon),
-            contentDescription = action.label,
-            tint = action.customization.iconColor
-        )
+        action.content()
     }
 }

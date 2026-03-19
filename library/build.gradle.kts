@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "com.stevdza_san"
-version = "1.0.4" // Semantic versioning for better compatibility
+version = "2.0.0" // Semantic versioning for better compatibility
 
 kotlin {
     jvm("desktop")
@@ -128,5 +128,5 @@ mavenPublishing {
     publishToMavenCentral()
 
     // Enable GPG signing for all publications
-    signAllPublications()
+//    signAllPublications()
 }

@@ -266,7 +266,7 @@ fun Swipeable(
                                 thresholdHapticTriggered = false
                                 lastHapticProgress = 0f
                                 progressMilestones.clear()
-                                
+
                                 coroutineScope.launch {
                                     val currentOffset = offsetX.value
 
@@ -371,7 +371,7 @@ fun Swipeable(
                                     offsetX.value < 0 -> rightHapticFeedbackConfig ?: hapticFeedbackConfig
                                     else -> hapticFeedbackConfig
                                 }
-                                
+
                                 if (activeHapticConfig.enabled) {
                                     // Verify there are actions available for the swipe direction
                                     val hasActions = when {
@@ -379,10 +379,10 @@ fun Swipeable(
                                         offsetX.value < 0 -> finalRightActions.isNotEmpty()
                                         else -> false
                                     }
-                                    
+
                                     if (hasActions) {
                                         val currentProgress = (abs(offsetX.value) / maxDragDistancePx).coerceIn(0f, 1f)
-                                        
+
                                         when (activeHapticConfig.mode) {
                                             HapticFeedbackMode.THRESHOLD_ONCE -> {
                                                 // Trigger once when threshold is reached
@@ -391,7 +391,7 @@ fun Swipeable(
                                                     thresholdHapticTriggered = true
                                                 }
                                             }
-                                            
+
                                             HapticFeedbackMode.CONTINUOUS -> {
                                                 // Trigger continuously while swiping (throttled by progress change)
                                                 // Only trigger if progress changed by at least 5% to avoid overwhelming
@@ -400,7 +400,7 @@ fun Swipeable(
                                                     lastHapticProgress = currentProgress
                                                 }
                                             }
-                                            
+
                                             HapticFeedbackMode.PROGRESS_STEPS -> {
                                                 // Trigger at 25%, 50%, 75%, and 100% of threshold
                                                 val milestone = when {
@@ -410,7 +410,7 @@ fun Swipeable(
                                                     currentProgress >= threshold * 0.25f -> 25
                                                     else -> 0
                                                 }
-                                                
+
                                                 if (milestone > 0 && !progressMilestones.contains(milestone)) {
                                                     hapticFeedback.performHapticFeedback(activeHapticConfig.intensity)
                                                     progressMilestones.add(milestone)
@@ -535,8 +535,7 @@ private fun BoxScope.RevealActionsContent(
 
             // Use custom spacing or calculate dynamic spacing based on button sizes
             val spacing = customSpacing ?: run {
-//                val maxButtonSize = actions.maxOfOrNull { it.customization.padding } ?: 48.dp
-                val maxButtonSize = 48.dp
+                val maxButtonSize = actions.maxOfOrNull { it.customization.padding } ?: 48.dp
                 (maxButtonSize * 0.16f).coerceAtLeast(6.dp) // 16% of largest button, minimum 6dp
             }
 
@@ -596,8 +595,11 @@ private fun ActionButton(
             .then(
                 animationConfig.customModifier?.invoke(progress) ?: Modifier
             ) // Apply custom animation
+            .size(action.customization.padding)
             .scale(scale)
             .alpha(alpha)
+            .clip(action.customization.shape)
+            .background(action.customization.containerColor)
             .then(
                 if (isInteractive) {
                     Modifier.clickable { onClick() }
@@ -607,6 +609,11 @@ private fun ActionButton(
             ),
         contentAlignment = Alignment.Center
     ) {
-        action.content()
+        Icon(
+            modifier = Modifier.size(action.customization.iconSize),
+            painter = painterResource(action.customization.icon),
+            contentDescription = action.label,
+            tint = action.customization.iconColor
+        )
     }
 }

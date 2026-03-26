@@ -27,5 +27,5 @@ dependencyResolutionManagement {
     }
 }
 
-//include(":composeApp")
+include(":composeApp")
 include(":library")

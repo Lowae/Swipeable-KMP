@@ -1,7 +1,6 @@
 package com.stevdza_san.swipeable.domain
 
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
@@ -34,7 +33,7 @@ data class ActionCustomization(
  * @param label Optional accessibility label for the action
  */
 data class SwipeAction(
-    val content: @Composable () -> Unit,
+    val customization: ActionCustomization,
     val onAction: () -> Unit,
     val label: String? = null
 )

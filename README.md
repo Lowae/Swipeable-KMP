@@ -84,6 +84,14 @@ implementation(libs.swipeable.kmp)
 
 ### Basic Usage
 
+> **Tip**: If you want to use `Icons.Default.*` (ImageVector) icons, add material icons to your `commonMain`:
+>
+> ```kotlin
+> implementation(compose.materialIconsExtended)
+> ```
+>
+> (Or `compose.materialIconsCore` if you only need the core set.)
+
 ```kotlin
 Swipeable(
     behavior = SwipeBehavior.REVEAL,
@@ -109,6 +117,28 @@ Swipeable(
         Text("Swipe me!") 
     }
 }
+```
+
+### Custom Action Content (Composable)
+
+You can fully customize what is rendered inside the action button via a composable `content` slot.
+
+```kotlin
+SwipeAction(
+    label = "Loading",
+    customization = ActionCustomization(
+        containerColor = Color(0xFF333333),
+        padding = 48.dp,
+        content = {
+            CircularProgressIndicator(
+                modifier = Modifier.size(18.dp),
+                strokeWidth = 2.dp,
+                color = Color.White
+            )
+        }
+    ),
+    onAction = { /* Handle action */ }
+)
 ```
 
 ---
@@ -140,6 +170,7 @@ Swipeable(
     rightDismissAction = SwipeAction(
         customization = ActionCustomization(
             icon = Icons.Default.Archive,
+            iconColor = Color.White,
             containerColor = Color.Blue
         ),
         onAction = { /* Archive item */ }
@@ -468,9 +499,12 @@ Defines an individual action button.
 ```kotlin
 SwipeAction(
     customization = ActionCustomization(
-        icon = Res.drawable.delete,        // Action icon
-        iconSize = 24.dp,                  // Icon size
-        iconColor = Color.White,           // Icon tint
+        // Provide either:
+        icon = Res.drawable.delete,        // DrawableResource (Compose Resources)
+        // icon = Icons.Default.Delete,    // ImageVector (Material Icons)
+        // content = { ... },              // Fully custom composable content
+        iconSize = 24.dp,                  // Icon/content size (used by built-in icon renderers)
+        iconColor = Color.White,           // Icon tint (Color.Unspecified disables tinting)
         containerColor = Color.Red,        // Button background
         shape = CircleShape,               // Button shape
         padding = 48.dp                    // Button size
@@ -580,6 +614,16 @@ object SwipeTheme {
         containerColor = Color(0xFF007AFF),
         iconColor = Color.White,
         shape = CircleShape
+    )
+
+    // Apply an icon later by copying a base style token
+    // (also works with ActionContent.Resource(...) or ActionContent.Composable(...))
+    val deleteAction = SwipeAction(
+        label = "Delete",
+        customization = dangerAction.copy(
+            icon = ActionContent.Vector(Icons.Default.Delete)
+        ),
+        onAction = { /* Delete */ }
     )
     
     // Gradient backgrounds

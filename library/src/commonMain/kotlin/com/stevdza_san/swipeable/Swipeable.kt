@@ -32,10 +32,13 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.stevdza_san.swipeable.domain.ActionAnimationConfig
+import com.stevdza_san.swipeable.domain.ActionContent
 import com.stevdza_san.swipeable.domain.HapticFeedbackConfig
 import com.stevdza_san.swipeable.domain.HapticFeedbackMode
 import com.stevdza_san.swipeable.domain.SwipeAction
@@ -601,6 +604,15 @@ private fun ActionButton(
             .clip(action.customization.shape)
             .background(action.customization.containerColor)
             .then(
+                if (action.label != null) {
+                    Modifier.semantics {
+                        contentDescription = action.label
+                    }
+                } else {
+                    Modifier
+                }
+            )
+            .then(
                 if (isInteractive) {
                     Modifier.clickable { onClick() }
                 } else {
@@ -609,11 +621,23 @@ private fun ActionButton(
             ),
         contentAlignment = Alignment.Center
     ) {
-        Icon(
-            modifier = Modifier.size(action.customization.iconSize),
-            painter = painterResource(action.customization.icon),
-            contentDescription = action.label,
-            tint = action.customization.iconColor
-        )
+        when (val icon = action.customization.icon) {
+            is ActionContent.Resource -> Icon(
+                modifier = Modifier.size(action.customization.iconSize),
+                painter = painterResource(icon.icon),
+                contentDescription = null,
+                tint = action.customization.iconColor
+            )
+
+            is ActionContent.Vector -> Icon(
+                modifier = Modifier.size(action.customization.iconSize),
+                imageVector = icon.icon,
+                contentDescription = null,
+                tint = action.customization.iconColor
+            )
+
+            is ActionContent.Composable -> icon.content(this)
+            ActionContent.None -> Unit
+        }
     }
 }
